@@ -1,0 +1,59 @@
+[bootstrap.packages]
+"brew:container" = "latest"
+"brew:git" = "latest"
+"brew:jq" = "latest"
+"brew:yq" = "latest"
+"brew:k3d" = "latest"
+"brew:vite" = "latest"
+"brew:node" = "latest"
+"brew:opencode" = "latest"
+"brew:tailscale" = "latest"
+"brew-cask:codex" = "latest"
+"brew-cask:claude-code" = "latest"
+"brew-cask:dotnet-sdk" = "latest"
+
+[dotfiles]
+"~/.zprofile/mise-path" = { line = 'export PATH="$HOME/.local/bin:$PATH"' }
+"~/.zprofile/homebrew-path" = { line = 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"' }
+"~/.zshrc/projects-directory" = { line = 'if [[ "$PWD" == "$HOME" && -d /Users/tt/projects ]]; then cd /Users/tt/projects; fi' }
+
+[bootstrap.macos.dock]
+autohide = true
+show_recents = false
+apps = []
+
+[bootstrap.macos.finder]
+show_all_files = true
+show_pathbar = true
+preferred_view_style = "list"
+
+[bootstrap.macos.defaults.NSGlobalDomain]
+"com.apple.trackpad.scaling" = 3.0
+
+[bootstrap.macos.defaults."com.apple.WindowManager"]
+StandardHideWidgets = true
+
+[tasks.bootstrap]
+depends = ["remove-apps", "setup-tailscale"]
+run = "mkdir -p /Users/tt/projects"
+
+[tasks.setup-tailscale]
+description = "Run Tailscale at system boot"
+run = '''
+if ! cmp -s /opt/homebrew/bin/tailscaled /usr/local/bin/tailscaled || ! sudo launchctl print system/com.tailscale.tailscaled >/dev/null 2>&1; then
+  sudo /opt/homebrew/bin/tailscaled install-system-daemon
+fi
+'''
+raw = true
+
+[tasks.remove-apps]
+description = "Remove GarageBand, its sound library, iMovie, Keynote, Pages, and Numbers"
+run = '''
+sudo rm -rf /Applications/GarageBand.app /Applications/iMovie.app \
+  "/Applications/Keynote Creator Studio.app" \
+  "/Applications/Numbers Creator Studio.app" \
+  "/Applications/Pages Creator Studio.app" \
+  "/Library/Application Support/GarageBand" \
+  "/Library/Audio/Apple Loops/Apple"
+'''
+raw = true
