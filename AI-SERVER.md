@@ -21,7 +21,6 @@ Open the login URL shown in the terminal.
 - **Account:** Same personal account as on the MacBook.
 - **Key expiry:** Disabled (Tailscale admin console → Machines → server Mac → ⋯ → Disable key expiry).
 
-
 ## Screen sharing settings
 
 Open **System Settings → General → Sharing** on the server Mac.
@@ -72,3 +71,39 @@ Open **System Settings → Apple Account → iCloud → See All** on the server 
 - **iCloud Drive → Sync this Mac:** Off.
 - **Photos → Sync this Mac:** Off.
 - **Notes, Contacts, Calendars, Reminders, Safari:** Off on this Mac.
+
+## OpenCode server (start at boot)
+
+### 1. Store the password
+
+Run on the server Mac; enter your chosen `<OPENCODE_PASSWORD>` at the hidden prompt:
+
+```sh
+sudo -v
+/bin/bash -c '
+read -r -s -p "OpenCode password: " password
+printf "\n"
+sudo security add-generic-password -U \
+  -a opencode -s ai-server-opencode \
+  -T /usr/bin/security -w "$password" \
+  /Library/Keychains/System.keychain
+'
+```
+
+### 2. Install the boot service
+
+Run from this repository; replace `<MACOS_USERNAME>` with your macOS username:
+
+```sh
+sudo ./setup-opencode-service.sh '<MACOS_USERNAME>'
+```
+
+### 3. Enable Tailscale access
+
+```sh
+sudo /opt/homebrew/bin/tailscale serve --bg --http=80 http://127.0.0.1:4096
+```
+
+Connect the iPhone to Tailscale. In the mobile app, set the server URL to
+`http://ai-server-01` (requires an app that supports HTTP).
+Sign in with username `opencode` and your chosen password.
