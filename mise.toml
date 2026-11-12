@@ -41,7 +41,30 @@ run = "mkdir -p /Users/tt/projects"
 description = "Run Tailscale at system boot"
 run = '''
 if ! cmp -s /opt/homebrew/bin/tailscaled /usr/local/bin/tailscaled || ! sudo launchctl print system/com.tailscale.tailscaled >/dev/null 2>&1; then
-  sudo /opt/homebrew/bin/tailscaled install-system-daemon
+  # launchd owns the installer so stopping Tailscale cannot kill it with SSH.
+  # Use a unique label so concurrent invocations cannot remove each other's job.
+  label="com.tailscale.bootstrap-update.$(date +%s).$$"
+  sudo launchctl submit -l "$label" \
+    -o /var/log/tailscale-bootstrap-update.log \
+    -e /var/log/tailscale-bootstrap-update.log \
+    -- /bin/sh -c '
+      job_label=$1
+      cleanup() {
+        result=$?
+        trap - 0 HUP INT TERM
+        echo "Tailscale daemon installation finished with exit code $result; removing launchd job $job_label"
+        launchctl remove "$job_label"
+        exit "$result"
+      }
+      trap cleanup 0
+      trap "exit 129" HUP
+      trap "exit 130" INT
+      trap "exit 143" TERM
+      sleep 5
+      /opt/homebrew/bin/tailscaled install-system-daemon
+    ' tailscale-bootstrap-update "$label"
+  echo "Tailscale update scheduled via launchd ($label); SSH may disconnect briefly."
+  echo "Update log: /var/log/tailscale-bootstrap-update.log"
 fi
 '''
 raw = true
