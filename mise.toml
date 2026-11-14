@@ -40,8 +40,29 @@ preferred_view_style = "list"
 StandardHideWidgets = true
 
 [tasks.bootstrap]
-depends = ["remove-apps", "setup-tailscale"]
+depends = ["remove-apps", "setup-tailscale", "setup-opencode"]
 run = "mkdir -p /Users/tt/projects"
+
+[tasks.setup-opencode]
+description = "Restart the optional OpenCode boot service after package upgrades"
+run = '''
+set -eu
+plist=/Library/LaunchDaemons/local.opencode.plist
+if [ -f "$plist" ]; then
+  # Run bootstrap as the same user selected when installing the boot service.
+  # Disable and stop OpenCode's separate per-user background service.
+  /opt/homebrew/bin/opencode service set disabled true
+  if sudo launchctl print system/local.opencode >/dev/null 2>&1; then
+    sudo launchctl kickstart -k system/local.opencode
+  else
+    sudo launchctl bootstrap system "$plist"
+  fi
+  echo "OpenCode boot service restarted with the installed version:"
+  /opt/homebrew/bin/opencode --version
+  echo "Connect with: opencode --server http://127.0.0.1:4096"
+fi
+'''
+raw = true
 
 [tasks.setup-tailscale]
 description = "Run Tailscale at system boot"

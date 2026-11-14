@@ -70,6 +70,11 @@ PLIST
 /bin/chmod 644 "$plist"
 /usr/bin/plutil -lint "$plist"
 
+# This machine uses the system boot service, not OpenCode's per-user service.
+# Apply the setting as its owner, so it does not change root's configuration.
+/usr/bin/sudo -n -H -u "$service_user" \
+  /opt/homebrew/bin/opencode service set disabled true
+
 if /bin/launchctl print system/local.opencode >/dev/null 2>&1; then
   /bin/launchctl bootout system/local.opencode
 fi
