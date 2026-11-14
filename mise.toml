@@ -12,10 +12,16 @@
 "brew-cask:claude-code" = "latest"
 "brew-cask:dotnet-sdk" = "latest"
 
+[bootstrap.mise_shell_activate]
+zshrc = true
+
 [dotfiles]
 "~/.zprofile/mise-path" = { line = 'export PATH="$HOME/.local/bin:$PATH"' }
 "~/.zprofile/homebrew-path" = { line = 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"' }
 "~/.zshrc/projects-directory" = { line = 'if [[ "$PWD" == "$HOME" && -d /Users/tt/projects ]]; then cd /Users/tt/projects; fi' }
+# Bootstrap applies dotfiles after packages, including OpenCode, are installed.
+"~/.local/bin/opencode-mise-shell" = { source = "opencode/mise-shell.tera", mode = "template", permissions = "0755" }
+"~/.config/opencode/opencode.jsonc/mise-shell" = { source = "opencode/config.jsonc.tera", merge = true, template = "tera" }
 
 [bootstrap.macos.dock]
 autohide = true

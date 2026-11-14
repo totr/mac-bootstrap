@@ -1,0 +1,4 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "shell": {{ (env.HOME ~ "/.local/bin/opencode-mise-shell") | json_encode }}
+}

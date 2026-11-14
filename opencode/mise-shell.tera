@@ -1,0 +1,2 @@
+#!/bin/sh
+exec {{ exec(command="command -v mise") | absolute | quote }} exec -- /bin/bash "$@"

@@ -95,7 +95,7 @@ sudo security add-generic-password -U \
 Run from this repository; replace `<MACOS_USERNAME>` with your macOS username:
 
 ```sh
-sudo ./setup-opencode-service.sh '<MACOS_USERNAME>'
+sudo ./opencode/setup-opencode-service.sh '<MACOS_USERNAME>'
 ```
 
 ### 3. Enable Tailscale access
