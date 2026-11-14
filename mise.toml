@@ -21,7 +21,7 @@ zshrc = true
 "~/.zshrc/projects-directory" = { line = 'if [[ "$PWD" == "$HOME" && -d /Users/tt/projects ]]; then cd /Users/tt/projects; fi' }
 # Bootstrap applies dotfiles after packages, including OpenCode, are installed.
 "~/.local/bin/opencode-mise-shell" = { source = "opencode/mise-shell.tera", mode = "template", permissions = "0755" }
-"~/.config/opencode/opencode.jsonc/mise-shell" = { source = "opencode/config.jsonc.tera", merge = true, template = "tera" }
+"~/.config/opencode/opencode.json/mise-shell" = { source = "opencode/config.jsonc.tera", merge = true, template = "tera" }
 
 [bootstrap.macos.dock]
 autohide = true
