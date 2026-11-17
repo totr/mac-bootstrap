@@ -66,21 +66,17 @@ fi
 raw = true
 
 [tasks.setup-codegraph]
-description = "Install the standalone CodeGraph CLI"
+description = "Install or update the standalone CodeGraph CLI"
 run = '''
-if [ ! -x "$HOME/.local/bin/codegraph" ]; then
-  installer=$(curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh)
-  CODEGRAPH_INSTALL_DIR="$HOME/.codegraph" CODEGRAPH_BIN_DIR="$HOME/.local/bin" sh -c "$installer"
-fi
+installer=$(curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh)
+CODEGRAPH_INSTALL_DIR="$HOME/.codegraph" CODEGRAPH_BIN_DIR="$HOME/.local/bin" sh -c "$installer"
 '''
 
 [tasks.setup-roslyn-mcp]
-description = "Install Roslyn MCP Server as a global .NET tool"
+description = "Install or update Roslyn MCP Server as a global .NET tool"
 run = '''
-installed_tools=$(dotnet tool list --global)
-if ! printf '%s\n' "$installed_tools" | grep -qi '^roslynmcp\.server[[:space:]]'; then
-  dotnet tool install -g RoslynMcp.Server --allow-roll-forward
-fi
+# Current .NET SDKs also update existing tools with the install command.
+dotnet tool install -g RoslynMcp.Server --allow-roll-forward
 '''
 
 [tasks.setup-tailscale]
