@@ -79,7 +79,7 @@ description = "Install Roslyn MCP Server as a global .NET tool"
 run = '''
 installed_tools=$(dotnet tool list --global)
 if ! printf '%s\n' "$installed_tools" | grep -qi '^roslynmcp\.server[[:space:]]'; then
-  dotnet tool install -g RoslynMcp.Server
+  dotnet tool install -g RoslynMcp.Server --allow-roll-forward
 fi
 '''
 
