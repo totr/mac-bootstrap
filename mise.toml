@@ -16,6 +16,7 @@
 zshrc = true
 
 [dotfiles]
+"~/Library/LaunchAgents/local.container.plist" = { source = "container/local.container.plist" }
 "~/.zprofile/mise-path" = { line = 'export PATH="$HOME/.local/bin:$PATH"' }
 "~/.zprofile/homebrew-path" = { line = 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"' }
 "~/.zprofile/dotnet-tools-path" = { line = 'export PATH="$HOME/.dotnet/tools:$PATH"' }
@@ -41,8 +42,18 @@ preferred_view_style = "list"
 StandardHideWidgets = true
 
 [tasks.bootstrap]
-depends = ["remove-apps", "setup-tailscale", "setup-opencode", "setup-roslyn-mcp", "setup-codegraph"]
+depends = ["remove-apps", "setup-container", "setup-tailscale", "setup-opencode", "setup-roslyn-mcp", "setup-codegraph"]
 run = "mkdir -p /Users/tt/projects"
+
+[tasks.setup-container]
+description = "Initialize Apple Container and start it at login"
+run = '''
+set -eu
+/opt/homebrew/bin/container system start --enable-kernel-install
+if ! launchctl print "gui/$(id -u)/local.container" >/dev/null 2>&1; then
+  launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/local.container.plist"
+fi
+'''
 
 [tasks.setup-opencode]
 description = "Restart the optional OpenCode boot service after package upgrades"
