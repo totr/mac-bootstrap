@@ -41,7 +41,7 @@ preferred_view_style = "list"
 StandardHideWidgets = true
 
 [tasks.bootstrap]
-depends = ["remove-apps", "setup-tailscale", "setup-opencode", "setup-roslyn-mcp"]
+depends = ["remove-apps", "setup-tailscale", "setup-opencode", "setup-roslyn-mcp", "setup-codegraph"]
 run = "mkdir -p /Users/tt/projects"
 
 [tasks.setup-opencode]
@@ -64,6 +64,15 @@ if [ -f "$plist" ]; then
 fi
 '''
 raw = true
+
+[tasks.setup-codegraph]
+description = "Install the standalone CodeGraph CLI"
+run = '''
+if [ ! -x "$HOME/.local/bin/codegraph" ]; then
+  installer=$(curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh)
+  CODEGRAPH_INSTALL_DIR="$HOME/.codegraph" CODEGRAPH_BIN_DIR="$HOME/.local/bin" sh -c "$installer"
+fi
+'''
 
 [tasks.setup-roslyn-mcp]
 description = "Install Roslyn MCP Server as a global .NET tool"
