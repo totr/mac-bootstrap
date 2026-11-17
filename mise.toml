@@ -18,6 +18,7 @@ zshrc = true
 [dotfiles]
 "~/.zprofile/mise-path" = { line = 'export PATH="$HOME/.local/bin:$PATH"' }
 "~/.zprofile/homebrew-path" = { line = 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"' }
+"~/.zprofile/dotnet-tools-path" = { line = 'export PATH="$HOME/.dotnet/tools:$PATH"' }
 "~/.zshrc/projects-directory" = { line = 'if [[ "$PWD" == "$HOME" && -d /Users/tt/projects ]]; then cd /Users/tt/projects; fi' }
 # Bootstrap applies dotfiles after packages, including OpenCode, are installed.
 "~/.local/bin/opencode-mise-shell" = { source = "opencode/mise-shell.tera", mode = "template", permissions = "0755" }
@@ -40,7 +41,7 @@ preferred_view_style = "list"
 StandardHideWidgets = true
 
 [tasks.bootstrap]
-depends = ["remove-apps", "setup-tailscale", "setup-opencode"]
+depends = ["remove-apps", "setup-tailscale", "setup-opencode", "setup-roslyn-mcp"]
 run = "mkdir -p /Users/tt/projects"
 
 [tasks.setup-opencode]
@@ -63,6 +64,15 @@ if [ -f "$plist" ]; then
 fi
 '''
 raw = true
+
+[tasks.setup-roslyn-mcp]
+description = "Install Roslyn MCP Server as a global .NET tool"
+run = '''
+installed_tools=$(dotnet tool list --global)
+if ! printf '%s\n' "$installed_tools" | grep -qi '^roslynmcp\.server[[:space:]]'; then
+  dotnet tool install -g RoslynMcp.Server
+fi
+'''
 
 [tasks.setup-tailscale]
 description = "Run Tailscale at system boot"
