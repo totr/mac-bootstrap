@@ -42,7 +42,7 @@ OPENCODE_PASSWORD=$(/usr/bin/security find-generic-password \
 test -n "$OPENCODE_PASSWORD"
 export OPENCODE_PASSWORD
 exec /usr/bin/sudo -n -H -u "$service_user" --preserve-env=OPENCODE_PASSWORD /bin/sh -c '
-  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.local/bin:$HOME/.dotnet/tools:/usr/local/share/dotnet:/usr/bin:/bin:/usr/sbin:/sbin"
   cd "$HOME"
   exec /opt/homebrew/bin/opencode serve --hostname 127.0.0.1 --port 4096
 '
