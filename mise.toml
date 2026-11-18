@@ -16,6 +16,7 @@
 zshrc = true
 
 [dotfiles]
+"~/.zshenv/dev-host" = { line = 'export DEV_HOST="$(PATH="/opt/homebrew/bin:/usr/local/bin:$PATH" tailscale ip -4 2>/dev/null)"' }
 "~/Library/LaunchAgents/local.container.plist" = { source = "container/local.container.plist" }
 "~/.zprofile/mise-path" = { line = 'export PATH="$HOME/.local/bin:$PATH"' }
 "~/.zprofile/homebrew-path" = { line = 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"' }

@@ -1,2 +1,3 @@
 #!/bin/sh
+export DEV_HOST="$(PATH="/opt/homebrew/bin:/usr/local/bin:$PATH" tailscale ip -4 2>/dev/null)"
 exec {{ exec(command="command -v mise") | absolute | quote }} exec -- /bin/bash "$@"
