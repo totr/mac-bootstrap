@@ -23,6 +23,12 @@ export PATH="$HOME/.local/bin:$PATH"
 mise bootstrap --from https://github.com/totr/mac-bootstrap.git
 ```
 
+Upgrade installed tools:
+
+```sh
+mise bootstrap --from https://github.com/totr/mac-bootstrap.git --update --upgrade
+```
+
 ## AI server (optional)
 
 For a Mac mini or Mac Studio used as a remotely accessed AI server, follow the
