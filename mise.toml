@@ -1,6 +1,3 @@
-[tools]
-"npm:@fission-ai/openspec" = "2.1.1"
-
 [bootstrap.packages]
 "brew:container" = "latest"
 "brew:git" = "latest"
@@ -19,6 +16,7 @@
 zshrc = true
 
 [dotfiles]
+"~/.config/mise/conf.d/tools.toml" = { source = "mise/tools.toml" }
 "~/.zshenv/dev-host" = { line = '''export DEV_HOST="$(export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"; tailscale status --json 2>/dev/null | jq -r '(.Self.DNSName // "") | split(".")[0] // ""')"''' }
 "~/Library/LaunchAgents/local.container.plist" = { source = "container/local.container.plist" }
 "~/.zprofile/mise-path" = { line = 'export PATH="$HOME/.local/bin:$PATH"' }
